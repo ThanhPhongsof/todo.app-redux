@@ -1,18 +1,54 @@
-import { Col, Row, Input, Button, Select, Tag } from "antd";
 import Todo from "../Todo";
+import { v4 } from "uuid";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Col, Row, Input, Button, Select, Tag } from "antd";
+import { addTodo } from "../../redux/actions";
+import { todosRemaining } from "../../redux/selector";
 
 const TodoList = () => {
+  const [todoName, setTodoName] = useState("");
+  const [priority, setPriority] = useState("Medium");
+
+  const todoList = useSelector(todosRemaining);
+
+  const dispatch = useDispatch();
+  const handleAddButtonClick = () => {
+    dispatch(
+      addTodo({
+        id: v4(),
+        name: todoName,
+        prioriry: priority,
+        completed: false,
+      })
+    );
+    setTodoName("");
+    setPriority("Medium");
+  };
+
+  const onChangeTodoNameHandler = (e) => {
+    e.target.value && setTodoName(e.target.value);
+  };
+
+  const onChangePriorityHandler = (value) => {
+    setPriority(value);
+  };
+
   return (
     <Row style={{ height: "calc(100% - 40px)" }}>
       <Col span={24} style={{ height: "calc(100% - 40px)", overflowY: "auto" }}>
-        <Todo name="Learn React" prioriry="High" />
-        <Todo name="Learn Redux" prioriry="Medium" />
-        <Todo name="Learn JavaScript" prioriry="Low" />
+        {todoList?.map((todo) => (
+          <Todo key={todo.id} name={todo.name} prioriry={todo.prioriry} />
+        ))}
       </Col>
       <Col span={24}>
         <Input.Group style={{ display: "flex" }} compact>
-          <Input />
-          <Select defaultValue="Medium">
+          <Input value={todoName} onChange={onChangeTodoNameHandler} />
+          <Select
+            defaultValue="Medium"
+            value={priority}
+            onChange={onChangePriorityHandler}
+          >
             <Select.Option value="High" label="High">
               <Tag color="red">High</Tag>
             </Select.Option>
@@ -23,7 +59,9 @@ const TodoList = () => {
               <Tag color="gray">Low</Tag>
             </Select.Option>
           </Select>
-          <Button type="primary">Add</Button>
+          <Button type="primary" onClick={handleAddButtonClick}>
+            Add
+          </Button>
         </Input.Group>
       </Col>
     </Row>
