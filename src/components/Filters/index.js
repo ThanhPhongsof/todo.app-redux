@@ -1,18 +1,47 @@
 import { Col, Row, Input, Typography, Radio, Select, Tag } from "antd";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { searchFilterChange } from "../../redux/actions";
+import {
+  priorityFilterChange,
+  searchFilterChange,
+  statusFilterChange,
+} from "../../redux/actions";
+import filtersSlice from "./filterSlice_ReactToolkit";
 
 const { Search } = Input;
 
 const Filters = () => {
-  const [searchText, setSearchText] = useState("");
-
   const dispatch = useDispatch();
 
-  const handleSearchTextChange = (e) => {
+  const [searchText, setSearchText] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [prioritiesFilter, setPrioritiesFilter] = useState([]);
+
+  const searchTextChangeHandler = (e) => {
     setSearchText(e.target.value);
-    dispatch(searchFilterChange(e.target.value));
+    // redux-core
+    // dispatch(searchFilterChange(e.target.value));
+
+    //redux-toolkit
+    dispatch(filtersSlice.actions.searchFilterChange(e.target.value));
+  };
+
+  const statusChangeHandler = (e) => {
+    setStatusFilter(e.target.value);
+    // redux-core
+    // dispatch(statusFilterChange(e.target.value));
+
+    //redux-toolkit
+    dispatch(statusFilterChange(e.target.value));
+  };
+
+  const prioritiesChangeHandler = (values) => {
+    setPrioritiesFilter(values);
+    // redux-core
+    // dispatch(priorityFilterChange(values));
+
+    //redux-toolkit
+    dispatch(filtersSlice.actions.priorityFilterChange(values));
   };
 
   return (
@@ -26,7 +55,7 @@ const Filters = () => {
         <Search
           placeholder="input search text"
           value={searchText}
-          onChange={handleSearchTextChange}
+          onChange={searchTextChangeHandler}
         />
       </Col>
       <Col sm={24}>
@@ -35,7 +64,7 @@ const Filters = () => {
         >
           Filter By Status
         </Typography.Paragraph>
-        <Radio.Group>
+        <Radio.Group value={statusFilter} onChange={statusChangeHandler}>
           <Radio value="All">All</Radio>
           <Radio value="Completed">Completed</Radio>
           <Radio value="Todo">To do</Radio>
@@ -52,6 +81,8 @@ const Filters = () => {
           allowClear
           placeholder="Please select"
           style={{ width: "100%" }}
+          value={prioritiesFilter}
+          onChange={prioritiesChangeHandler}
         >
           <Select.Option value="High" label="High">
             <Tag color="red">High</Tag>

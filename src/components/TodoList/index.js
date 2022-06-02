@@ -4,18 +4,28 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Row, Input, Button, Select, Tag } from "antd";
 import { addTodo } from "../../redux/actions";
-import { todosRemaining } from "../../redux/selector";
+import { todosRemainingSelector } from "../../redux/selector";
+import todoListSlice from "./todoSlice_ReactToolkit";
 
 const TodoList = () => {
   const [todoName, setTodoName] = useState("");
   const [priority, setPriority] = useState("Medium");
 
-  const todoList = useSelector(todosRemaining);
+  const todoList = useSelector(todosRemainingSelector);
 
   const dispatch = useDispatch();
   const handleAddButtonClick = () => {
     dispatch(
-      addTodo({
+      // redux-core
+      // addTodo({
+      //   id: v4(),
+      //   name: todoName,
+      //   prioriry: priority,
+      //   completed: false,
+      // })
+
+      // redux-toolkit
+      todoListSlice.actions.addTodo({
         id: v4(),
         name: todoName,
         prioriry: priority,
@@ -38,7 +48,13 @@ const TodoList = () => {
     <Row style={{ height: "calc(100% - 40px)" }}>
       <Col span={24} style={{ height: "calc(100% - 40px)", overflowY: "auto" }}>
         {todoList?.map((todo) => (
-          <Todo key={todo.id} name={todo.name} prioriry={todo.prioriry} />
+          <Todo
+            key={todo.id}
+            id={todo.id}
+            name={todo.name}
+            prioriry={todo.prioriry}
+            completed={todo.completed}
+          />
         ))}
       </Col>
       <Col span={24}>
