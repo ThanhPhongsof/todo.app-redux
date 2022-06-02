@@ -32,7 +32,7 @@ const Filters = () => {
     // dispatch(statusFilterChange(e.target.value));
 
     //redux-toolkit
-    dispatch(statusFilterChange(e.target.value));
+    dispatch(filtersSlice.actions.statusFilterChange(e.target.value));
   };
 
   const prioritiesChangeHandler = (values) => {
