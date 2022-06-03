@@ -4,22 +4,19 @@ import TodoList from "./components/TodoList";
 import Filters from "./components/Filters";
 import { setupServer } from "./fakeApis";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchTodos } from "./components/TodoList/todoSlice_ReactToolkit";
 
 const { Title } = Typography;
-setupServer();
+
+if (process.env.NODE_ENV === "development") {
+  setupServer();
+}
 
 function App() {
+  const dispatch = useDispatch();
   useEffect(() => {
-    fetch("/api/todos", {
-      method: "POST",
-      body: JSON.stringify(),
-    });
-
-    fetch("/api/todos/")
-      .then((res) => res.json())
-      .then((res) =>
-        console.log("🚀 ~ file: App.js ~ line 16 ~ useEffect ~ res", res)
-      );
+    dispatch(fetchTodos());
   }, []);
 
   return (

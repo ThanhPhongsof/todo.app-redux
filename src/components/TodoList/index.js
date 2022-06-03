@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Col, Row, Input, Button, Select, Tag } from "antd";
 import { addTodo } from "../../redux/actions";
 import { todosRemainingSelector } from "../../redux/selector";
-import todoListSlice from "./todoSlice_ReactToolkit";
+import todoListSlice, { addNewTodo, addTodos } from "./todoSlice_ReactToolkit";
 
 const TodoList = () => {
   const [todoName, setTodoName] = useState("");
@@ -15,23 +15,32 @@ const TodoList = () => {
 
   const dispatch = useDispatch();
   const handleAddButtonClick = () => {
-    dispatch(
-      // redux-core
-      // addTodo({
-      //   id: v4(),
-      //   name: todoName,
-      //   prioriry: priority,
-      //   completed: false,
-      // })
+    // dispatch(
+    //   //   // redux-core
+    //   //   // addTodo({
+    //   //   //   id: v4(),
+    //   //   //   name: todoName,
+    //   //   //   prioriry: priority,
+    //   //   //   completed: false,
+    //   //   // })
 
-      // redux-toolkit
-      todoListSlice.actions.addTodo({
+    //   //   // redux-toolkit
+    //   todoListSlice.actions.addTodo({
+    //     id: v4(),
+    //     name: todoName,
+    //     prioriry: priority,
+    //     completed: false,
+    //   })
+    // );
+    dispatch(
+      addNewTodo({
         id: v4(),
         name: todoName,
         prioriry: priority,
         completed: false,
       })
     );
+
     setTodoName("");
     setPriority("Medium");
   };
